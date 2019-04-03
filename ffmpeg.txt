@@ -1,0 +1,18 @@
+ffmpeg -i input -c:v libx264 -crf 25 -c:a copy output.mkv
+
+
+for i in *.mkv; do ffmpeg -async 1 -vsync 1 -i "$i" -c:v libx264 -preset slow -crf 25 -coder 1 -pix_fmt yuv420p -bf 2 -c:a copy output/"${i%.*}.mkv"; done
+
+
+
+#!/bin/sh
+ffmpeg -i input -c:v libx264 -preset slow -profile:v high -crf 18 -coder 1 -pix_fmt yuv420p -movflags +faststart -g 30 -bf 2 -c:a aac -b:a 384k -profile:a aac_low output
+
+Video codec: H.264
+Parameter	YouTube recommends setting
+-profile:v high	High Profile
+-bf 2	2 consecutive B frames
+-g 30	Closed GOP. GOP of half the frame rate.
+-coder 1	CABAC
+-crf 18	Variable bitrate.
+-pix_fmt yuv420p	Chroma subsampling: 4:2:0
