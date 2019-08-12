@@ -1,5 +1,8 @@
 ffmpeg -i input -c:v libx264 -crf 25 -c:a copy output.mkv
 
+#use Intel Quicksync with QCP
+ffmpeg -init_hw_device qsv=hw -filter_hw_device hw -i input.mp4 -vf hwupload=extra_hw_frames=64,format=qsv -c:v h264_qsv -q 25 output.mp4
+ffmpeg -i input.mp4 -c:v h264_qsv -q 25 -c:a copy output.mp4
 
 for i in *.mkv; do ffmpeg -async 1 -vsync 1 -i "$i" -c:v libx264 -preset slow -crf 25 -coder 1 -pix_fmt yuv420p -bf 2 -c:a copy output/"${i%.*}.mkv"; done
 
