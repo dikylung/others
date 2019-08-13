@@ -1,8 +1,11 @@
 ffmpeg -i input -c:v libx264 -crf 25 -c:a copy output.mkv
 
-#use Intel Quicksync with QCP
-ffmpeg -init_hw_device qsv=hw -filter_hw_device hw -i input.mp4 -vf hwupload=extra_hw_frames=64,format=qsv -c:v h264_qsv -q 25 output.mp4
-ffmpeg -i input.mp4 -c:v h264_qsv -q 25 -c:a copy output.mp4
+#use Intel Quicksync with "crf" (crf 23 = global_quality 25 look_ahead=1)
+ffmpeg -init_hw_device qsv=hw -filter_hw_device hw -i input.mp4 -vf hwupload=extra_hw_frames=64,format=qsv -c:v h264_qsv -global_quality 30 -look_ahead 1 output.mp4
+ffmpeg -i input.mp4 -c:v h264_qsv -global_quality 30 -look_ahead 1 -c:a copy output.mp4
+
+#videotoolbox (mac os) maxrate and buffsize optional
+ffmpeg -i input.mp4 -c:v h264_videotoolbox -maxrate-b:v 2M -c:a copy test.mkv
 
 for i in *.mkv; do ffmpeg -async 1 -vsync 1 -i "$i" -c:v libx264 -preset slow -crf 25 -coder 1 -pix_fmt yuv420p -bf 2 -c:a copy output/"${i%.*}.mkv"; done
 
