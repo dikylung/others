@@ -10,7 +10,7 @@ ffmpeg -vsync 1 -i input -c:v h264_qsv -global_quality 23 -c:a copy output.mkv
 ffmpeg -i input.mp4 -c:v h264_qsv -global_quality 30 -look_ahead 1 -c:a copy output.mp4
 
 #videotoolbox (mac os) maxrate and buffsize optional
-ffmpeg -i input.mp4 -c:v h264_videotoolbox -maxrate-b:v 2M -c:a copy test.mkv
+ffmpeg -i input.mp4 -c:v h264_videotoolbox -b:v 2M -maxrate 5M -bufsize 10M -c:a copy test.mkv
 
 # H.265 / HEVC
 ffmpeg -vsync 1 -i input -load_plugin hevc_hw -c:v hevc_qsv -global_quality 23 -c:a copy output.mkv
