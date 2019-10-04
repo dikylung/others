@@ -1,3 +1,41 @@
+```
+ffmpeg -i input -c:v libx264 -crf 25 -c:a copy output.mkv
+
+#use Intel Quicksync with "crf" (crf 23 = global_quality 25 look_ahead=1)
+ffmpeg -init_hw_device qsv=hw -filter_hw_device hw -i input.mp4 -vf hwupload=extra_hw_frames=64,format=qsv -c:v h264_qsv -global_quality 30 -look_ahead 1 output.mp4
+
+# with global_quality
+ffmpeg -vsync 1 -i input -c:v h264_qsv -global_quality 23 -c:a copy output.mkv
+
+# with global_quality + look_ahead
+ffmpeg -i input.mp4 -c:v h264_qsv -global_quality 30 -look_ahead 1 -c:a copy output.mp4
+
+#videotoolbox (mac os) maxrate and buffsize optional
+ffmpeg -i input.mp4 -c:v h264_videotoolbox -b:v 2M -maxrate 5M -bufsize 10M -c:a copy test.mkv
+
+#vaapi (ubuntu 18.04) WARNING: Don't use the SNAP ffmpeg version, it WON't WORK!!
+ffmpeg -vaapi_device /dev/dri/renderD128 -i test.mkv -c:v h264_vaapi -vf 'format=nv12,hwupload' -qp 23 -c:a copy test-vaapi-qp23-nohwaccel.mkv
+
+# H.265 / HEVC
+ffmpeg -vsync 1 -i input -load_plugin hevc_hw -c:v hevc_qsv -global_quality 23 -c:a copy output.mkv
+
+# Loops
+for i in *.mkv; do ffmpeg -async 1 -vsync 1 -i "$i" -c:v libx264 -preset slow -crf 25 -coder 1 -pix_fmt yuv420p -bf 2 -c:a copy output/"${i%.*}.mkv"; done
+
+
+#!/bin/sh
+ffmpeg -i input -c:v libx264 -preset slow -profile:v high -crf 18 -coder 1 -pix_fmt yuv420p -movflags +faststart -g 30 -bf 2 -c:a aac -b:a 384k -profile:a aac_low output
+
+Video codec: H.264
+Parameter	YouTube recommends setting
+-profile:v high	High Profile
+-bf 2	2 consecutive B frames
+-g 30	Closed GOP. GOP of half the frame rate.
+-coder 1	CABAC
+-crf 18	Variable bitrate.
+-pix_fmt yuv420p	Chroma subsampling: 4:2:0
+```
+
 1. Set stream 0:2 volume to 6%
 1. Merge the 2 audio tracks into 1
 1. downmix to mono, encode in aac
