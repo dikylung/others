@@ -41,3 +41,20 @@ Parameter	YouTube recommends setting
 1. downmix to mono, encode in aac
 
 `$ffmpeg -i input.mkv -to 01:00:39 -filter_complex '[0:2]volume=0.06[2];[0:1][2]amerge=inputs=2[a]' -map 0:0 -map [a] -c:v copy -ac 1 -c:a aac output.mp4`
+```
+ffmpeg -i 'input.mkv' -filter_complex '[0:a:1]volume=0.1[l];[0:a:0][l]amerge=inputs=2[a]' -map '0:v:0' -map '[a]' -c:v copy -c:a libmp3lame -q:a 3 -ac 2 'output.mp4'
+
+My understanding of the command is as follows:
+
+    filter_complex is a series of filters that operates on the input. Inside it, filters have inputs and outputs that are the parts in square brackets. So a filter with two inputs looks like this: [input0][input1]filter[output].
+    [0:a:1] picks the 0th input file’s 1st audio track as input for the filter.
+    volume=0.1[l] lowers the volume (this can also use dB units) and puts the result into l.
+    [0:a:0][l] selects both the 0th input file’s 0th audio track and l from the previous filter as inputs.
+    amerge=inputs=2 merges the given 2 input audio tracks. Here you would need to modify the 2 and the inputs if you had more than 2 audio tracks to merge.
+    [a] puts the output of the amerge into a.
+    map switches select the used video and audio tracks for the output. Here we use the original video as video track and the filtered audio a as the audio track.
+    c:v copy sets video codec to copy which just copies it without changing.
+    c:a libmp3lame uses LAME to convert the audio to MP3, here you could use some other codec if you wanted.
+    q:a 3 is VBR quality 3 for the LAME codec.
+    ac 2 sets output audio to have 2 channels (stereo).
+```
