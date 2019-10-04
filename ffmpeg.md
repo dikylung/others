@@ -58,3 +58,5 @@ My understanding of the command is as follows:
     q:a 3 is VBR quality 3 for the LAME codec.
     ac 2 sets output audio to have 2 channels (stereo).
 ```
+### Trim Video
+`$ffmpeg -i input.mp4 -ss 01:10:27 -to 02:18:51 -c:v copy -c:a copy output.mp4`
