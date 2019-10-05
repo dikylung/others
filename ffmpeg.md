@@ -60,3 +60,10 @@ My understanding of the command is as follows:
 ```
 ### Trim Video
 `$ffmpeg -i input.mp4 -ss 01:10:27 -to 02:18:51 -c:v copy -c:a copy output.mp4`
+
+### Convert to MPEG4 Part 2 (XVID/DiVX) for Honda HR-V in-dash unit
+#### Single File
+`$ ffmpeg -i input.MP4 -vf "scale=640:360:force_original_aspect_ratio=decrease,pad=640:360:(ow-iw)/2:(oh-ih)/2" -c:v mpeg4 -vtag xvid -q:v 13 -c:a mp3 -q:a 5 output.AVI`
+#### Loop IT !
+`$ for i in *.mp4; do ffmpeg -i $i -vf "scale=640:360:force_original_aspect_ratio=decrease,pad=640:360:(ow-iw)/2:(oh-ih)/2" -c:v mpeg4 -vtag xvid -q:v 13 -c:a mp3 -q:a 5 "${i%.*}.avi"; done`
+
