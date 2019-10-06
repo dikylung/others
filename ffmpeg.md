@@ -63,7 +63,12 @@ My understanding of the command is as follows:
 
 ### Convert to MPEG4 Part 2 (XVID/DiVX) for Honda HR-V in-dash unit
 #### Single File
-`$ ffmpeg -i input.MP4 -vf "scale=640:360:force_original_aspect_ratio=decrease,pad=640:360:(ow-iw)/2:(oh-ih)/2" -c:v mpeg4 -vtag xvid -q:v 13 -c:a mp3 -q:a 5 output.AVI`
+`$ ffmpeg -i input.MP4 -vf "scale=640:360:force_original_aspect_ratio=decrease,pad=640:360:(ow-iw)/2:(oh-ih)/2" -c:v mpeg4 -vtag xvid -q:v 4 -c:a mp3 -q:a 7 output.AVI`
 #### Loop IT !
-`$ for i in *.mp4; do ffmpeg -i $i -vf "scale=640:360:force_original_aspect_ratio=decrease,pad=640:360:(ow-iw)/2:(oh-ih)/2" -c:v mpeg4 -vtag xvid -q:v 13 -c:a mp3 -q:a 5 "${i%.*}.avi"; done`
+### Linux/MacOS
+`$ for i in *.mp4; do ffmpeg -i $i -vf "scale=640:360:force_original_aspect_ratio=decrease,pad=640:360:(ow-iw)/2:(oh-ih)/2" -c:v mpeg4 -vtag xvid -q:v 4 -c:a mp3 -q:a 7 "${i%.*}.avi"; done`
+### Windows
+`for %%A IN ("*.mp4") DO ffmpeg -stats -v 1 -i "%%A" -vf scale=640:-1 ^
+ -c:v libxvid -qscale:v 4 -c:a libmp3lame -b:a 96k "output\%%A.avi"`
+
 
