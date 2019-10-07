@@ -14,7 +14,7 @@ ffmpeg -i input.mp4 -c:v h264_qsv -global_quality 30 -look_ahead 1 -c:a copy out
 ffmpeg -i input.mp4 -c:v h264_videotoolbox -b:v 2M -maxrate 5M -bufsize 10M -c:a copy test.mkv
 
 #vaapi (ubuntu 18.04) WARNING: Don't use the SNAP ffmpeg version, it WON't WORK!!
-ffmpeg -vaapi_device /dev/dri/renderD128 -i test.mkv -c:v h264_vaapi -vf 'format=nv12,hwupload' -qp 23 -c:a copy test-vaapi-qp23-nohwaccel.mkv
+ffmpeg -vaapi_device /dev/dri/renderD128 -i input.mkv -c:v h264_vaapi -vf 'format=nv12,hwupload' -qp 24 -bf 2 -c:a copy output.mkv
 
 # H.265 / HEVC
 ffmpeg -vsync 1 -i input -load_plugin hevc_hw -c:v hevc_qsv -global_quality 23 -c:a copy output.mkv
