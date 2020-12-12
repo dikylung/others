@@ -66,10 +66,12 @@ example: speed up 60x = 1/60 = 0.0166677
 `ffmpeg -i input.mkv -vf "setpts=0.0166667*PTS" -an output.mkv`
 
 ### Stabilize Video (2pass with Vidstab)
-First pass, limit to 60 secs. Remove -t 60 if you're happy with the result.
+#### First pass
+Remove -t 60 (limit to first 60 seconds) if you're happy with the result.
+
 `ffmpeg -t 60 -i input.mp4 -vf vidstabdetect=stepsize=32:shakiness=10:accuracy=10:result=transform_vectors.trf -f null - `
 
-Second pass
+#### Second pass
 `ffmpeg -t 60 -i input.mp4 -y -vf vidstabtransform=input=transform_vectors.trf:zoom=0:smoothing=10,unsharp=5:5:0.8:3:3:0.4,scale=-1:720 -vcodec libx264 -tune film -an output.mp4`
 
 
