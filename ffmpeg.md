@@ -61,6 +61,18 @@ My understanding of the command is as follows:
 ### Trim Video
 `$ffmpeg -i input.mp4 -ss 01:10:27 -to 02:18:51 -c:v copy -c:a copy output.mp4`
 
+### Speedup-Slowdown Video
+example: speed up 60x = 1/60 = 0.0166677
+`ffmpeg -i input.mkv -vf "setpts=0.0166667*PTS" -an output.mkv`
+
+### Stabilize Video (2pass with Vidstab)
+First pass, limit to 60 secs. Remove -t 60 if you're happy with the result.
+`ffmpeg -t 60 -i input.mp4 -vf vidstabdetect=stepsize=32:shakiness=10:accuracy=10:result=transform_vectors.trf -f null - `
+
+Second pass
+`ffmpeg -t 60 -i input.mp4 -y -vf vidstabtransform=input=transform_vectors.trf:zoom=0:smoothing=10,unsharp=5:5:0.8:3:3:0.4,scale=-1:720 -vcodec libx264 -tune film -an output.mp4`
+
+
 ### Convert to MPEG4 Part 2 (XVID/DiVX) for Honda HR-V in-dash unit
 #### Single File
 `$ ffmpeg -i input.MP4 -vf "scale=640:360:force_original_aspect_ratio=decrease,pad=640:360:(ow-iw)/2:(oh-ih)/2" -c:v mpeg4 -vtag xvid -q:v 4 -c:a mp3 -q:a 7 output.AVI`
