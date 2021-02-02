@@ -1,0 +1,9 @@
+#!/bin/sh
+# ffshare <input> <720> for 720p
+if [ $# == 1 ]; then
+    ffmpeg -vsync 1 -i "$1" -c:v libx264 -crf 27 -bf 2 -g 30 -c:a aac "${1%.*}-libx264.mp4";
+elif [ $# == 2 ]; then
+    ffmpeg -vsync 1 -i "$1" -vf scale=-2:$2,setsar=1:1 -c:v libx264 -crf 27 -bf 2 -g 30 -c:a aac "${1%.*}-$2p-libx264.mp4";
+else
+    echo "to make 720p video, use: $0 <inputfile> <720>";
+fi
