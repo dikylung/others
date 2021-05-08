@@ -93,3 +93,6 @@ Remove -t 60 (limit to first 60 seconds) if you're happy with the result.
 #### Windows
 `for %%A IN ("*.mp4") DO ffmpeg -stats -v 1 -i "%%A" -vf scale=640:-1 ^
  -c:v libxvid -qscale:v 4 -c:a libmp3lame -b:a 96k "output\%%A.avi"`
+ 
+ ### Cropping and convert to GIF
+`ffmpeg -i input -vf "fps=10,scale=-1:240:flags=lanczos,split[s0][s1];[s0]palettegen[p];[s1][p]paletteuse,crop=240:240:exact=1" -loop 0 output.gif
