@@ -7,6 +7,10 @@
 * H.265 / HEVC
   * `ffmpeg -vsync 1 -i input -load_plugin hevc_hw -c:v hevc_qsv -global_quality 23 -c:a copy output.mkv`
 
+### Transcode using ATI Radeon h264_amf (Windows)
+* -ss is start offset, -t is seconds from start offset.
+  * `ffmpeg -ss 00:10:00 -t 60 -vsync 1 -i input_file -c:v h264_amf -g 11 -rc cqp -qp_i 21 -qp_p 21 -qp_b 21 -quality balanced -c:a aac output_file.mp4`
+
 ### Transcode using Video Toolbox (MacOS)
 * maxrate and buffsize optional
   * `ffmpeg -i input.mp4 -c:v h264_videotoolbox -b:v 2M -maxrate 5M -bufsize 10M -c:a copy test.mkv`
